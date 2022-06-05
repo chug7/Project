@@ -1,0 +1,5 @@
+{
+    "git.alwaysShowStagedChangesResourceGroup": false,
+    "debug.toolBarLocation": "floating",
+    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": false
+}
