@@ -263,14 +263,13 @@ router.put(
 
 router.delete('/experience/:exp_id', auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id }) //get profile of user
-    //Get remove index (to get the correct experience to remove)
+    const profile = await Profile.findOne({ user: req.user.id })
 
-    const removeIndex = profile.experience //get the index
+    const removeIndex = profile.experience
 
-      .map((item) => item.id) //map through the profile experience and return the item's ids only
-      .indexOf(req.params.exp_id) //match it to this
-    profile.experience.splice(removeIndex, 1) // take out the experience with that index
+      .map((item) => item.id)
+      .indexOf(req.params.exp_id)
+    profile.experience.splice(removeIndex, 1)
     await profile.save()
     res.json(profile)
   } catch (err) {
@@ -321,11 +320,10 @@ router.put(
     }
 
     try {
-      //first need to fetch the profile to add the education to
-      const profile = await Profile.findOne({ user: req.user_id }) // match the user field with req.user_id-> from the token
+      const profile = await Profile.findOne({ user: req.user_id })
 
       profile.education.unshift(newEdu)
-      await profile.save() // profile.education is an array - adding education on front of array not back - use unshift
+      await profile.save()
 
       res.json(profile)
     } catch (err) {
@@ -341,14 +339,11 @@ router.put(
 
 router.delete('/education/:edu_id', auth, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id }) //get profile of user
-    //Get remove index (to get the correct education to remove)
-
-    const removeIndex = profile.education //get the index
-
-      .map((item) => item.id) //map through the profile education and return the item's ids only
-      .indexOf(req.params.edu_id) //match it to this
-    profile.education.splice(removeIndex, 1) // take out the education with that index
+    const profile = await Profile.findOne({ user: req.user.id })
+    const removeIndex = profile.education
+      .map((item) => item.id)
+      .indexOf(req.params.edu_id)
+    profile.education.splice(removeIndex, 1)
     await profile.save()
     res.json(profile)
   } catch (err) {
