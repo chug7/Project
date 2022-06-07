@@ -320,7 +320,7 @@ router.put(
     }
 
     try {
-      const profile = await Profile.findOne({ user: req.user_id })
+      const profile = await Profile.findOne({ user: req.user.id })
 
       profile.education.unshift(newEdu)
       await profile.save()
