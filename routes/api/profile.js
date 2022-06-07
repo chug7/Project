@@ -104,19 +104,6 @@ router.post(
     }
   },
 )
-//@route GET api/profile/
-//@desc Get all profiles
-//@access Public
-
-router.get('/', async (req, res) => {
-  try {
-    const profiles = await Profile.find().populate('user', ['name', 'avatar'])
-    res.json(profiles)
-  } catch (err) {
-    console.error(err.message)
-    res.status(500).send('Server Error')
-  }
-})
 
 //@route GET api/profile/user/:user_id
 //@desc Get profile by user id
@@ -161,60 +148,6 @@ router.delete('/', auth, async (req, res) => {
     res.status(500).send('Server Error')
   }
 })
-
-//@route PUT api/profile/experience
-//@desc Add profile experience
-//@access Private
-
-router.put(
-  '/experience',
-  [
-    auth,
-    [
-      check('title', 'Title is required').notEmpty(),
-      check('company', 'Company is required').notEmpty(),
-      check('from', 'From date is required').notEmpty(),
-    ],
-  ],
-  async (req, res) => {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
-    }
-
-    const {
-      title,
-      company,
-      location,
-      from,
-      to,
-      current,
-      description,
-    } = req.body
-
-    const newExp = {
-      title,
-      company,
-      location,
-      from,
-      to,
-      current,
-      description,
-    }
-
-    try {
-      const profile = await Profile.findOne({ user: req.user.id })
-      profile.experience.unshift(newExp)
-
-      await profile.save()
-
-      res.json(profile)
-    } catch (err) {
-      console.error(err.message)
-      res.status(500).send('Server Error')
-    }
-  },
-)
 
 //@route GET api/profile/
 //@desc Get all profiles
@@ -311,11 +244,10 @@ router.put(
     }
 
     try {
-      //first need to fetch the profile to add the experience to
-      const profile = await Profile.findOne({ user: req.user_id }) // match the user field with req.user_id-> from the token
-
+      const profile = await Profile.findOne({ user: req.user.id })
       profile.experience.unshift(newExp)
-      await profile.save() // profile.experience is an array - adding experience on front of array not back - use unshift
+
+      await profile.save()
 
       res.json(profile)
     } catch (err) {
@@ -324,5 +256,105 @@ router.put(
     }
   },
 )
+
+//@route DELETE api/profile/experience/:exp_id
+//@desc Delete experience
+//@access Private
+
+router.delete('/experience/:exp_id', auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id }) //get profile of user
+    //Get remove index (to get the correct experience to remove)
+
+    const removeIndex = profile.experience //get the index
+
+      .map((item) => item.id) //map through the profile experience and return the item's ids only
+      .indexOf(req.params.exp_id) //match it to this
+    profile.experience.splice(removeIndex, 1) // take out the experience with that index
+    await profile.save()
+    res.json(profile)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+  }
+})
+
+//@route PUT api/profile/education
+//@desc Add profile education
+//@access Private
+
+router.put(
+  '/education',
+  [
+    auth,
+    [
+      check('school', 'School is required').notEmpty(),
+      check('degree', 'Degree is required').notEmpty(),
+      check('fieldofstudy', 'Field of study is required').notEmpty(),
+      check('from', 'From date is required').notEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
+
+    const {
+      school,
+      degree,
+      fieldofstudy,
+      from,
+      to,
+      current,
+      description,
+    } = req.body
+
+    const newEdu = {
+      school,
+      degree,
+      fieldofstudy,
+      from,
+      to,
+      current,
+      description,
+    }
+
+    try {
+      //first need to fetch the profile to add the education to
+      const profile = await Profile.findOne({ user: req.user_id }) // match the user field with req.user_id-> from the token
+
+      profile.education.unshift(newEdu)
+      await profile.save() // profile.education is an array - adding education on front of array not back - use unshift
+
+      res.json(profile)
+    } catch (err) {
+      console.error(err.message)
+      res.status(500).send('Server Error')
+    }
+  },
+)
+
+//@route DELETE api/profile/education/:edu_id
+//@desc Delete education
+//@access Private
+
+router.delete('/education/:edu_id', auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id }) //get profile of user
+    //Get remove index (to get the correct education to remove)
+
+    const removeIndex = profile.education //get the index
+
+      .map((item) => item.id) //map through the profile education and return the item's ids only
+      .indexOf(req.params.edu_id) //match it to this
+    profile.education.splice(removeIndex, 1) // take out the education with that index
+    await profile.save()
+    res.json(profile)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+  }
+})
 
 module.exports = router
