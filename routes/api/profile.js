@@ -1,4 +1,6 @@
 const express = require('express')
+const request = require('request')
+const config = require('config')
 const router = express.Router()
 const auth = require('../../middleware/auth')
 const { check, validationResult } = require('express-validator')
@@ -266,7 +268,6 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
     const profile = await Profile.findOne({ user: req.user.id })
 
     const removeIndex = profile.experience
-
       .map((item) => item.id)
       .indexOf(req.params.exp_id)
     profile.experience.splice(removeIndex, 1)
@@ -346,6 +347,36 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
     profile.education.splice(removeIndex, 1)
     await profile.save()
     res.json(profile)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+  }
+})
+
+//@route GET api/profile/github/:username
+//@desc  Get user repos from github
+//@access Public (vieweing a profile is public)
+
+router.get('/github/:username', (req, res) => {
+  try {
+    const options = {
+      uri: `https://api.github.com/users/${
+        req.params.username
+      }/repos?per_page=5&sort=created:asc&client_id=${config.get(
+        'gitHubClientId',
+      )}&client_secret=${config.get('gitHubSecret')}`,
+      method: 'GET',
+      headers: { 'user-agent': 'node.js' },
+    }
+    //the request takes in our options and then a callback, which can give error, a response object, and body
+    request(options, (error, response, body) => {
+      if (error) console.error(error)
+      if (response.statusCode !== 200) {
+        res.status(404).json({ msg: 'No github profile found' })
+      }
+
+      res.json(JSON.parse(body))
+    })
   } catch (err) {
     console.error(err.message)
     res.status(500).send('Server Error')
