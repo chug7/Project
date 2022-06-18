@@ -16,8 +16,8 @@ const App = () => (
       </Routes>
       <section className="container">
         <Routes>
-          <Route exact path="/register.html" element={<Register />} />
-          <Route exact path="/login.html" element={<Login />} />
+          <Route exact path="register" element={<Register />} />
+          <Route exact path="login" element={<Login />} />
         </Routes>
       </section>
     </Fragment>
