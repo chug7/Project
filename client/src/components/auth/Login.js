@@ -2,10 +2,10 @@ import React from 'react'
 import { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-const Login = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
   })
 
   const { email, password } = formData // (object destructuring)
@@ -15,15 +15,14 @@ const Login = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault()
-      console.log('SUCCESS')
-     }
+    console.log('SUCCESS')
   }
 
   return (
     <Fragment>
-      <h1 className="large text-primary">Sign In</h1>
+      <h1 className="large text-primary">Sign Up</h1>
       <p className="lead">
-        <i className="fas fa-user"></i> Sign Into Your Account
+        <i className="fas fa-user"></i> Create Your Account
       </p>
       <form className="form" onSubmit={(e) => onSubmit(e)}>
         <div className="form-group">
@@ -47,13 +46,13 @@ const Login = () => {
             required
           />
         </div>
-        <input type="submit" className="btn btn-primary" value="Login" />
+        <input type="submit" className="btn btn-primary" value="Register" />
       </form>
       <p className="my-1">
-        Don't have an account? <Link to='/register'>Sign Up</Link>
+        Don't have an account? <Link to="/Register">Register</Link>
       </p>
     </Fragment>
   )
 }
 
-export default Login
+export default Register
