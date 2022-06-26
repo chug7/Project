@@ -8,6 +8,7 @@ import './App.css'
 //Redux
 import { Provider } from 'react-redux'
 import store from './store'
+import Alert from './components/layout/Alert'
 
 const App = () => (
   //changed "function App()" into an arrow function
@@ -15,6 +16,7 @@ const App = () => (
     <BrowserRouter>
       <Fragment>
         <Navbar />
+        <Alert />
         <Routes>
           <Route exact path="/" element={<Landing />} />
         </Routes>

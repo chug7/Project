@@ -1,6 +1,8 @@
-import React from 'react'
-import { Fragment, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setAlert } from '../../actions/alert'
+import PropTypes from 'prop-types'
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,8 @@ const Register = () => {
     password2: '',
   })
 
+  const dispatch = useDispatch()
+
   const { name, email, password, password2 } = formData // (object destructuring)
 
   const onChange = (e) =>
@@ -18,28 +22,9 @@ const Register = () => {
   const onSubmit = async (e) => {
     e.preventDefault()
     if (password !== password2) {
-      console.log('Passwords do not match')
+      dispatch(setAlert('Passwords do not match', 'danger'))
     } else {
       console.log('SUCCESS')
-      // const newUser = {
-      //   //create a new user object
-      //   name,
-      //   email,
-      //   password,
-      // }
-
-      // try {
-      //   const config = {
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //   }
-      //   const body = JSON.stringify(newUser)
-      //   const res = await axios.post('/api/users', body, config)
-      //   console.log(res.data)
-      // } catch (err) {
-      //   console.log(err.response.data)
-      // }
     }
   }
 
@@ -97,6 +82,7 @@ const Register = () => {
             required
           />
         </div>
+
         <input type="submit" className="btn btn-primary" value="Register" />
       </form>
       <p className="my-1">
@@ -104,6 +90,10 @@ const Register = () => {
       </p>
     </Fragment>
   )
+}
+
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired,
 }
 
 export default Register
