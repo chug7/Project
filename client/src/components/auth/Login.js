@@ -1,8 +1,13 @@
 import React from 'react'
 import { Fragment, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Link, Navigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import { login } from '../../actions/auth'
 
-const Register = () => {
+//note destructuring { login } so we dont have to put in props.login
+
+const Login = ({ login, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -15,7 +20,12 @@ const Register = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault()
-    console.log('SUCCESS')
+    login(email, password)
+  }
+
+  //Redirect if logged in
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" />
   }
 
   return (
@@ -55,4 +65,13 @@ const Register = () => {
   )
 }
 
-export default Register
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
+}
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+})
+
+export default connect(mapStateToProps, { login })(Login)
