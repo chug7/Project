@@ -9,6 +9,7 @@ import './App.css'
 import { Provider } from 'react-redux'
 import store from './store'
 import Alert from './components/layout/Alert'
+import Dashboard from './components/dashboard/Dashboard'
 import { loadUser } from './actions/auth'
 import setAuthToken from './utils/setAuthToken'
 
@@ -34,6 +35,7 @@ const App = () => {
           <Routes>
             <Route exact path="register" element={<Register />} />
             <Route exact path="login" element={<Login />} />
+            <Route exact path="dashboard" element={<Dashboard />} />
           </Routes>
         </section>
       </BrowserRouter>

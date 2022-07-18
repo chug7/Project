@@ -24,6 +24,7 @@
     "mongoose": "^6.3.4",
     "react-router-dom": "^6.3.0",
     "request": "^2.88.2",
+    "sentiment": "^5.0.2",
     "validator": "^13.7.0"
   },
   "devDependencies": {
