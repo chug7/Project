@@ -10,8 +10,6 @@ import { Provider } from 'react-redux'
 import store from './store'
 import Alert from './components/layout/Alert'
 import Dashboard from './components/dashboard/Dashboard'
-import PrivateRoute from './components/routing/PrivateRoute'
-
 import { loadUser } from './actions/auth'
 import setAuthToken from './utils/setAuthToken'
 
@@ -37,7 +35,7 @@ const App = () => {
           <Routes>
             <Route exact path="register" element={<Register />} />
             <Route exact path="login" element={<Login />} />
-            <PrivateRoute exact path="/dashboard" component={ Dashboard } />
+            <Route exact path="dashboard" element={<Dashboard />} />
           </Routes>
         </section>
       </BrowserRouter>
